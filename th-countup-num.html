@@ -11,11 +11,7 @@
         :host {
           display: inline-block;
           position: relative;
-          width: {{width + "px"}};
-        }
-
-        #container {
-          width: {{width + "px"}};
+          width: 100%;
         }
 
         span {
@@ -29,7 +25,7 @@
         }
 
       </style>
-      <div id="container">
+      <div id="container" style="width: {{width | widthFilter}};">
         <th-text markdown="false" type="{{type}}">
           <span id="before_num" style="color:{{color}}"></span>
           <span id="unit_before" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
