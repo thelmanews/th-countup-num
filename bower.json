@@ -7,7 +7,6 @@
     "polymer": "Polymer/polymer#~0.5.1",
     "countUp.js": "latest",
     "th-animated": "https://github.com/thelmanews/th-animated.git",
-    "web-animations-js": "https://github.com/web-animations/web-animations-js.git",
-    "th-text": "https://github.com/thelmanews/th-text.git"
+    "web-animations-js": "https://github.com/web-animations/web-animations-js.git"
   }
 }

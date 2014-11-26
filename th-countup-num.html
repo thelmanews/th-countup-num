@@ -1,9 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../th-animated/th-animated.html">
-<link rel="import" href="../th-text/th-text.html">
 
-
-<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type width growNumber color numberColor" >
+<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor" >
 
   <template>
       <core-style ref="theme"></core-style>
@@ -11,7 +9,7 @@
         :host {
           display: inline-block;
           position: relative;
-          width: 100%;
+          border: 1px solid red;
         }
 
         span {
@@ -25,14 +23,12 @@
         }
 
       </style>
-      <div id="container" style="width: {{width | widthFilter}};">
-        <th-text markdown="false" type="{{type}}">
+      <div id="container" style="width: 100%; height: 100%;" class="{{type}}">
           <span id="before_num" style="color:{{color}}"></span>
           <span id="unit_before" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
           <span id="num" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
           <span id="unit_after" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
           <span id="after_num" style="color:{{color}}"></span>
-        </th-text>
       </div>
   </template>
 
@@ -44,11 +40,6 @@
         startFromSameNumberOfDigit: true,  // to make sure span with remains the same
         duration: 2,
         ready: function() {
-
-            this.init();
-
-        },
-        init: function() {
           var content = this.textContent;
           //TODO validation
           var number = content.match(/\d+/g) || 40; //This gets called three times, on the 3rd, the content is false.
@@ -58,7 +49,9 @@
           var beforeAfter = content.split(/\d+/,2);
 
           var container = this.$.container;
+
           var beforeEl = this.$.before_num;
+          
           var numEl = this.$.num;
           var afterEl = this.$.after_num;
           var unitBefore = this.$.unit_before;
