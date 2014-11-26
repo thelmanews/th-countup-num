@@ -26,13 +26,11 @@
 
       </style>
       <div id="container" style="width: {{width | widthFilter}};">
-        <th-text markdown="false" type="{{type}}">
-          <span id="before_num" style="color:{{color}}"></span>
-          <span id="unit_before" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
-          <span id="num" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
-          <span id="unit_after" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
-          <span id="after_num" style="color:{{color}}"></span>
-        </th-text>
+        <span id="before_num" style="color:{{color}}"></span>
+        <span id="unit_before" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
+        <span id="num" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
+        <span id="unit_after" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
+        <span id="after_num" style="color:{{color}}"></span>
       </div>
   </template>
 
