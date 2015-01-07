@@ -40,6 +40,10 @@
         startFromSameNumberOfDigit: true,  // to make sure span with remains the same
         duration: 2,
         ready: function() {
+          var self = this;
+
+          self.numberSizeCurrent = self.growNumber == "true" ? "" : self.numberSize;
+
           var content = this.textContent;
           //TODO validation
           var number = content.match(/\d+/g) || 40; //This gets called three times, on the 3rd, the content is false.
@@ -91,7 +95,6 @@
           var self = this;
           
           self.cnt.start();
-          self.numberSizeCurrent = self.growNumber == "true" ? "" : self.numberSize;
           
           if (self.growNumber == "true"){
             self.fontsize = 12;
