@@ -2,7 +2,7 @@
 <link rel="import" href="../th-animated/th-animated.html">
 
 
-<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment decimalPlaces" >
+<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment" >
 
   <template>
       <core-style ref="theme"></core-style>
@@ -38,7 +38,6 @@
         startFromSameNumberOfDigit: true,  // to make sure span with remains the same
         duration: 4,
         alightment: 'left',
-        decimalPlaces: 0,
         ready: function() {
           var self = this,
               options = {
@@ -48,10 +47,12 @@
                 decimal : '.'
               },
               content = this.textContent,
-              number = content.match(/\d+\.*\d*/) || 40, //This gets called three times, on the 3rd, the content is false.
-              digits = number.toString().length,
-              beforeAfter = content.split(/\d+\.*\d*/,2),
-              numEl = this.$.num;
+              numberMatch = content.match(/\d+\.*\d*/), //This gets called three times, on the 3rd, the content is false.
+              number = numberMatch ? numberMatch[0] : 40,
+              digits = number.toString().split('.')[0].length,
+              beforeAfter = content.split(number,2),
+              numEl = this.$.num,
+              decimalPlaces = this.getDecimalPlaces(number);
 
           self.numberSizeCurrent = self.growNumber == "true" ? "" : self.numberSize;
 
@@ -76,9 +77,8 @@
           }
 
           var start = (Boolean(this.startFromSameNumberOfDigit) && this.startFrom<0) ? Math.pow(10,digits-1) : this.startFrom;
-
           
-          this.cnt = new countUp(numEl, start, number[0], this.decimalPlaces, this.duration, options);
+          this.cnt = new countUp(numEl, start, number, decimalPlaces, this.duration, options);
 
         },
         reset: function() {
@@ -103,7 +103,23 @@
                }
              }, intervalTime)
             }
-        }
+        },
+        /**
+        * '_decimalPlaces' takes a number and determines how many digits come after the decimal point
+        * @param  {Number} num is the number to test
+        * @return {Number} number of digits
+        */
+        getDecimalPlaces: function(num){
+          var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+            
+            if (!match) { return 0; }
+            return Math.max(
+                 0,
+                 // Number of digits right of decimal point.
+                 (match[1] ? match[1].length : 0)
+                 // Adjust for scientific notation.
+                 - (match[2] ? +match[2] : 0));
+        },
       });
 
   </script>
