@@ -66,11 +66,8 @@
           }
 
           if(beforeAfter && beforeAfter.length>1) {
-            console.log(beforeAfter)  
             var splitUnitsAfter = beforeAfter[1].match(/^(#|%|\+|-|\$)(.*)/); // matches 1) symbol at beginning of line 2) everything else
             if (splitUnitsAfter) {
-              console.log(splitUnitsAfter);
-              // console.log(this.options);
               this.afterNum = splitUnitsAfter[2];
               options.suffix = splitUnitsAfter[1];
             } else {
