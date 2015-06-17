@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../th-animated/th-animated.html">
+<link rel="import" href="../th-text/th-text.html">
 
 
 <polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment" >
@@ -21,12 +22,19 @@
           font-size: {{numberSizeCurrent + "px"}};
           color: {{color}};
         }
+        th-text {
+          display: inline-block;
+        }
+
+        th-text /deep/ #container {
+          padding: 0; /* Remove default padding */
+        }
 
       </style>
       <div id="container" style="width: 100%; height: 100%; text-align: {{alignment}};" class="{{type}}">
-          <span id="before_num" style="color:{{color}}">{{beforeNum}}</span>
-          <span id="num" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></span>
-          <span id="after_num" style="color:{{color}}">{{afterNum}}</span>
+          <th-text id="before_num" style="color:{{color}};">{{beforeNum}}</th-text>
+          <th-text id="num" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></th-text>
+          <th-text id="after_num" style="color:{{color}}">{{afterNum}}</th-text>
       </div>
   </template>
 
