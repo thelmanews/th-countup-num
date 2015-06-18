@@ -3,7 +3,7 @@
 <link rel="import" href="../th-text/th-text.html">
 
 
-<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment markdown" >
+<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment markdown numberSizeEm" >
 
   <template>
       <core-style ref="theme"></core-style>
@@ -31,11 +31,25 @@
         }
 
       </style>
-      <div id="container" style="width: 100%; height: 100%; text-align: {{alignment}};" class="{{type}}">
-          <th-text markdown="{{markdown}}" id="before_num" style="color:{{color}};">{{beforeNum}}</th-text>
-          <th-text markdown="{{markdown}}" id="num" style="font-size: {{numberSizeCurrent}}px; color:{{numberColor || color}}"></th-text>
-          <th-text markdown="{{markdown}}" id="after_num" style="color:{{color}}">{{afterNum}}</th-text>
-      </div>
+      
+      <!-- If markdown option set, use th-text and apply the type via the attribute -->
+      <template if="{{markdown}}">
+        <div id="container" style="width: 100%; height: 100%; text-align: {{alignment}};"  >
+          <th-text type="{{type}}" markdown="true" id="before_num" style="color:{{color}};">{{beforeNum}}</th-text>
+          <th-text type="{{type}}" markdown="true" id="num" style="font-size: {{numberSizeCurrent | addUnits}}; color:{{numberColor || color}}"></th-text>
+          <th-text type="{{type}}" markdown="true" id="after_num" style="color:{{color}}">{{afterNum}}</th-text>
+        </div>
+      </template>
+
+      <!-- If markdown option is not set, use spans which are always inline and set container class to the type -->
+      <template if="{{!markdown}}">
+        <div id="container" style="width: 100%; height: 100%; text-align: {{alignment}};" class="{{type}}">
+          <span id="before_num" style="color:{{color}};">{{beforeNum}}</span>
+          <span id="num" style="font-size: {{numberSizeCurrent | addUnits}}; color:{{numberColor || color}}"></span>
+          <span id="after_num" style="color:{{color}}">{{afterNum}}</span>
+        </div>
+      </template>
+      
   </template>
 
   <script src="../countUp.js/countUp.js"></script>
@@ -45,8 +59,11 @@
         markdown: true,
         startFrom: -1,
         startFromSameNumberOfDigit: true,  // to make sure span with remains the same
-        duration: 4,
+        duration: 3,
         alightment: 'left',
+        numberSizeEm: 1.5,
+        growNumber: false,
+        type: 'mainpoint',
         ready: function() {
           var self = this,
               options = {
@@ -63,11 +80,17 @@
               numEl = this.$.num,
               decimalPlaces = this.getDecimalPlaces(number);
 
-          self.numberSizeCurrent = self.growNumber == "true" ? "" : self.numberSize;
+          if (self.numberSize){
+            self.numberSizeCurrent = self.growNumber ? "" : self.numberSize;
+            self._numberUnits = 'px';
+          } else {
+            self.numberSizeCurrent = self.growNumber ? 1 : self.numberSizeEm;
+            self._numberUnits = 'em';
+          } 
 
           if(beforeAfter && beforeAfter.length>0) {
             var splitUnitsBefore = beforeAfter[0].match(/(.*)(#|%|\+|-|\$)$/); // matches 1) everything else 2) symbol at the end of the line
-	            if (splitUnitsBefore) {
+              if (splitUnitsBefore) {
                 options.prefix = splitUnitsBefore[2];
                 this.beforeNum = splitUnitsBefore[1];
               } else {
@@ -98,19 +121,41 @@
           
           self.cnt.start();
           
-          if (self.growNumber == "true"){
-            self.fontsize = 12;
-            var intervals = (self.numberSize - self.fontsize),
-                intervalTime = self.duration*1000 / intervals;
+          if (self.growNumber){
+            // Scale the growing number differently, depending on whether it's in pixels or ems
+            if (self._numberUnits === 'em'){
+              self.fontsize = 1;
+              var intervals = (self.numberSizeEm - self.fontsize) * 40,
+                  intervalTime = (self.duration*1000 / intervals) * 0.5;
+
+              var grow = setInterval(function(){
+                 if (self.fontsize < self.numberSizeEm){
+                   self.fontsize += 0.025;
+                   console.log(self.fontsize);
+                   self.numberSizeCurrent = self.fontsize;
+                 } else {
+                   clearInterval(grow);
+                 }
+
+              }, intervalTime)
+
+            } else {
+              var computedFont = window.getComputedStyle(self)["font-size"];
+              self.fontsize = parseInt(computedFont) || 12;
+              
+              var intervals = (self.numberSize - self.fontsize),
+                  intervalTime = self.duration*1000 / intervals;
            
-            var count = setInterval(function(){               
-               if (self.fontsize < self.numberSize){
-                 self.fontsize += 1.75;
-                 self.numberSizeCurrent = self.fontsize;
-               } else {
-                 clearInterval(count);
-               }
-             }, intervalTime)
+
+              var grow = setInterval(function(){               
+                 if (self.fontsize < self.numberSize){
+                   self.fontsize += 1.75;
+                   self.numberSizeCurrent = self.fontsize;
+                 } else {
+                   clearInterval(grow);
+                 }
+               }, intervalTime)
+              }
             }
         },
         /**
@@ -129,6 +174,9 @@
                  // Adjust for scientific notation.
                  - (match[2] ? +match[2] : 0));
         },
+        addUnits: function(number){
+          return number + this._numberUnits;
+        }
       });
 
   </script>
