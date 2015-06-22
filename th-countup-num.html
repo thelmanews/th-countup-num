@@ -3,7 +3,7 @@
 <link rel="import" href="../th-text/th-text.html">
 
 
-<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment markdown numberSizeEm" >
+<polymer-element name="th-countup-num" extends="th-animated" attributes="startFrom startFromSameNumberOfDigit duration numberSize type growNumber color numberColor alignment markdown numberSizeEm separator" >
 
   <template>
       <core-style ref="theme"></core-style>
@@ -64,12 +64,13 @@
         numberSizeEm: 1.5,
         growNumber: false,
         type: 'mainpoint',
+        separator: '', // character to use for thousands separator (i.e. ",")
         ready: function() {
           var self = this,
               options = {
                 useEasing : true, 
                 useGrouping : true, 
-                separator : ',', 
+                separator : self.separator, 
                 decimal : '.'
               },
               content = this.textContent,
