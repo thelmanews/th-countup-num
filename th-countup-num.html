@@ -36,7 +36,7 @@
       <template if="{{markdown}}">
         <div id="container" style="width: 100%; height: 100%; text-align: {{alignment}};"  >
           <th-text type="{{type}}" markdown="true" id="before_num" style="color:{{color}};">{{beforeNum}}</th-text>
-          <th-text type="{{type}}" markdown="true" id="num" style="font-size: {{numberSizeCurrent | addUnits}}; color:{{numberColor || color}}"></th-text>
+          <span type="{{type}}" markdown="true" id="num" style="font-size: {{numberSizeCurrent | addUnits}}; color:{{numberColor || color}}"></span>
           <th-text type="{{type}}" markdown="true" id="after_num" style="color:{{color}}">{{afterNum}}</th-text>
         </div>
       </template>
